@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
@@ -26,31 +27,33 @@
 
 #include "cpufreq-monitor.h"
 
-#define CPUFREQ_TYPE_MONITOR_LIBCPUFREQ            \
-    (cpufreq_monitor_libcpufreq_get_type ())
-#define CPUFREQ_MONITOR_LIBCPUFREQ(obj)            \
-    (G_TYPE_CHECK_INSTANCE_CAST ((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, CPUFreqMonitorLibcpufreq))
-#define CPUFREQ_MONITOR_LIBCPUFREQ_CLASS(klass)    \
-    (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, CPUFreqMonitorLibcpufreqClass))
-#define CPUFREQ_IS_MONITOR_LIBCPUFREQ(obj)         \
-    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ))
+#define CPUFREQ_TYPE_MONITOR_LIBCPUFREQ (cpufreq_monitor_libcpufreq_get_type())
+#define CPUFREQ_MONITOR_LIBCPUFREQ(obj)                               \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, \
+                              CPUFreqMonitorLibcpufreq))
+#define CPUFREQ_MONITOR_LIBCPUFREQ_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, \
+                           CPUFreqMonitorLibcpufreqClass))
+#define CPUFREQ_IS_MONITOR_LIBCPUFREQ(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ))
 #define CPUFREQ_IS_MONITOR_LIBCPUFREQ_CLASS(klass) \
-    (G_TYPE_CHECK_CLASS_TYPE ((klass), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ))
-#define CPUFREQ_MONITOR_LIBCPUFREQ_GET_CLASS(obj)  \
-    (G_TYPE_INSTANCE_GET_CLASS ((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, CPUFreqMonitorLibcpufreqClass))
+  (G_TYPE_CHECK_CLASS_TYPE((klass), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ))
+#define CPUFREQ_MONITOR_LIBCPUFREQ_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), CPUFREQ_TYPE_MONITOR_LIBCPUFREQ, \
+                             CPUFreqMonitorLibcpufreqClass))
 
-typedef struct _CPUFreqMonitorLibcpufreq      CPUFreqMonitorLibcpufreq;
+typedef struct _CPUFreqMonitorLibcpufreq CPUFreqMonitorLibcpufreq;
 typedef struct _CPUFreqMonitorLibcpufreqClass CPUFreqMonitorLibcpufreqClass;
 
 struct _CPUFreqMonitorLibcpufreq {
-    CPUFreqMonitor parent;
+  CPUFreqMonitor parent;
 };
 
 struct _CPUFreqMonitorLibcpufreqClass {
-    CPUFreqMonitorClass parent_class;
+  CPUFreqMonitorClass parent_class;
 };
 
-GType           cpufreq_monitor_libcpufreq_get_type (void) G_GNUC_CONST;
-CPUFreqMonitor *cpufreq_monitor_libcpufreq_new      (guint cpu);
+GType cpufreq_monitor_libcpufreq_get_type(void) G_GNUC_CONST;
+CPUFreqMonitor *cpufreq_monitor_libcpufreq_new(guint cpu);
 
 #endif /* __CPUFREQ_MONITOR_LIBCPUFREQ_H__ */

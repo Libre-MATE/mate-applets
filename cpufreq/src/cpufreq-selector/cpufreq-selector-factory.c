@@ -14,11 +14,12 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include "cpufreq-selector-factory.h"
@@ -28,18 +29,16 @@
 #include "cpufreq-selector-sysfs.h"
 #endif
 
-CPUFreqSelector *
-cpufreq_selector_factory_create_selector (guint cpu)
-{
+CPUFreqSelector* cpufreq_selector_factory_create_selector(guint cpu) {
 #ifdef HAVE_LIBCPUFREQ
-    return cpufreq_selector_libcpufreq_new (cpu);
+  return cpufreq_selector_libcpufreq_new(cpu);
 #else
-    CPUFreqSelector *selector = NULL;
+  CPUFreqSelector *selector = NULL;
 
-    if (g_file_test ("/sys/devices/system/cpu/cpu0/cpufreq", G_FILE_TEST_EXISTS)) {
-        selector = cpufreq_selector_sysfs_new (cpu);
-    }
+  if (g_file_test("/sys/devices/system/cpu/cpu0/cpufreq", G_FILE_TEST_EXISTS)) {
+    selector = cpufreq_selector_sysfs_new(cpu);
+  }
 
-    return selector;
+  return selector;
 #endif /* HAVE_LIBCPUFREQ */
 }

@@ -13,9 +13,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- $Id$
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ *  USA.
  */
 
 /*
@@ -29,16 +28,16 @@
 
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <sys/ioctl.h>
-#include <machine/apm_bios.h>
-#include <stdlib.h>
 #include <errno.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <glib.h>
+#include <machine/apm_bios.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "acpi-freebsd.h"
 
@@ -46,9 +45,7 @@
 
 #include <dev/acpica/acpiio.h>
 
-static gboolean
-update_ac_info(struct acpi_info * acpiinfo)
-{
+static gboolean update_ac_info(struct acpi_info *acpiinfo) {
   int acline;
   size_t len = sizeof(acline);
 
@@ -63,9 +60,7 @@ update_ac_info(struct acpi_info * acpiinfo)
   return TRUE;
 }
 
-static gboolean
-update_battery_info(struct acpi_info * acpiinfo)
-{
+static gboolean update_battery_info(struct acpi_info *acpiinfo) {
   union acpi_battery_ioctl_arg battio;
   int i;
 
@@ -74,7 +69,7 @@ update_battery_info(struct acpi_info * acpiinfo)
    * may be useful to get time left to full charge.
    */
 
-  for(i = BATT_MIN; i < BATT_MAX; i++) {
+  for (i = BATT_MIN; i < BATT_MAX; i++) {
     battio.unit = i;
     if (ioctl(acpiinfo->acpifd, ACPIIO_CMBAT_GET_BIF, &battio) == -1) {
       continue;
@@ -88,9 +83,7 @@ update_battery_info(struct acpi_info * acpiinfo)
   return TRUE;
 }
 
-gboolean
-acpi_freebsd_init(struct acpi_info * acpiinfo)
-{
+gboolean acpi_freebsd_init(struct acpi_info *acpiinfo) {
   int acpi_fd;
 
   g_assert(acpiinfo);
@@ -98,8 +91,7 @@ acpi_freebsd_init(struct acpi_info * acpiinfo)
   acpi_fd = open(ACPIDEV, O_RDONLY);
   if (acpi_fd >= 0) {
     acpiinfo->acpifd = acpi_fd;
-  }
-  else {
+  } else {
     acpiinfo->acpifd = -1;
     return FALSE;
   }
@@ -110,9 +102,7 @@ acpi_freebsd_init(struct acpi_info * acpiinfo)
   return TRUE;
 }
 
-void
-acpi_freebsd_cleanup(struct acpi_info * acpiinfo)
-{
+void acpi_freebsd_cleanup(struct acpi_info *acpiinfo) {
   g_assert(acpiinfo);
 
   if (acpiinfo->acpifd >= 0) {
@@ -125,9 +115,7 @@ acpi_freebsd_cleanup(struct acpi_info * acpiinfo)
  * Devd provides this (or supposedly provides this), but you need to be
  * root to access devd.
  */
-gboolean
-acpi_process_event(struct acpi_info * acpiinfo)
-{
+gboolean acpi_process_event(struct acpi_info *acpiinfo) {
   g_assert(acpiinfo);
 
   update_ac_info(acpiinfo);
@@ -136,9 +124,8 @@ acpi_process_event(struct acpi_info * acpiinfo)
   return TRUE;
 }
 
-gboolean
-acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo)
-{
+gboolean acpi_freebsd_read(struct apm_info *apminfo,
+                           struct acpi_info *acpiinfo) {
   int time;
   int life;
   int state;
@@ -153,7 +140,7 @@ acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo)
 
   charging = FALSE;
 
-  for(i = BATT_MIN; i < BATT_MAX; i++) {
+  for (i = BATT_MIN; i < BATT_MAX; i++) {
     battio.unit = i;
     if (ioctl(acpiinfo->acpifd, ACPIIO_CMBAT_GET_BST, &battio) == -1) {
       continue;
@@ -182,24 +169,23 @@ acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo)
   if (state & ACPI_BATT_STAT_CHARGING) {
     apminfo->ai_batt_stat = 3;
     charging = TRUE;
-  }
-  else if (state & ACPI_BATT_STAT_CRITICAL) {
+  } else if (state & ACPI_BATT_STAT_CRITICAL) {
     /* Add a special check here since FreeBSD's ACPI interface will tell us
      * when the battery is critical.
      */
     apminfo->ai_batt_stat = 2;
-  }
-  else {
-    apminfo->ai_batt_stat = remain < acpiinfo->low_capacity ? 1 : remain < acpiinfo->critical_capacity ? 2 : 0;
+  } else {
+    apminfo->ai_batt_stat = remain < acpiinfo->low_capacity        ? 1
+                            : remain < acpiinfo->critical_capacity ? 2
+                                                                   : 0;
   }
   apminfo->ai_batt_life = life;
   if (!charging) {
     apminfo->ai_batt_time = time;
-  }
-  else if (rate > 0) {
-    apminfo->ai_batt_time = (int) ((acpiinfo->max_capacity-remain)/(float)rate);
-  }
-  else
+  } else if (rate > 0) {
+    apminfo->ai_batt_time =
+        (int)((acpiinfo->max_capacity - remain) / (float)rate);
+  } else
     apminfo->ai_batt_time = -1;
 
   return TRUE;
@@ -207,28 +193,16 @@ acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo)
 
 #else /* !defined(HAVE_ACPIIO) */
 
-gboolean
-acpi_freebsd_init(struct acpi_info * acpiinfo)
-{
+gboolean acpi_freebsd_init(struct acpi_info *acpiinfo) { return FALSE; }
+
+gboolean acpi_process_event(struct acpi_info *acpiinfo) { return FALSE; }
+
+gboolean acpi_freebsd_read(struct apm_info *apminfo,
+                           struct acpi_info *acpiinfo) {
   return FALSE;
 }
 
-gboolean
-acpi_process_event(struct acpi_info * acpiinfo)
-{
-  return FALSE;
-}
-
-gboolean
-acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo)
-{
-  return FALSE;
-}
-
-void
-acpi_freebsd_cleanup(struct acpi_info * acpiinfo)
-{
-}
+void acpi_freebsd_cleanup(struct acpi_info *acpiinfo) {}
 
 #endif /* defined(HAVE_ACPIIO) */
 

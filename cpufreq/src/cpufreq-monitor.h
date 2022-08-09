@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
@@ -26,46 +27,50 @@
 
 G_BEGIN_DECLS
 
-#define CPUFREQ_TYPE_MONITOR            (cpufreq_monitor_get_type ())
-#define CPUFREQ_MONITOR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), CPUFREQ_TYPE_MONITOR, CPUFreqMonitor))
-#define CPUFREQ_MONITOR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR, CPUFreqMonitorClass))
-#define CPUFREQ_IS_MONITOR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CPUFREQ_TYPE_MONITOR))
-#define CPUFREQ_IS_MONITOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), CPUFREQ_TYPE_MONITOR))
-#define CPUFREQ_MONITOR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), CPUFREQ_TYPE_MONITOR, CPUFreqMonitorClass))
+#define CPUFREQ_TYPE_MONITOR (cpufreq_monitor_get_type())
+#define CPUFREQ_MONITOR(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), CPUFREQ_TYPE_MONITOR, CPUFreqMonitor))
+#define CPUFREQ_MONITOR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR, CPUFreqMonitorClass))
+#define CPUFREQ_IS_MONITOR(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), CPUFREQ_TYPE_MONITOR))
+#define CPUFREQ_IS_MONITOR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), CPUFREQ_TYPE_MONITOR))
+#define CPUFREQ_MONITOR_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), CPUFREQ_TYPE_MONITOR, CPUFreqMonitorClass))
 
-typedef struct _CPUFreqMonitor        CPUFreqMonitor;
-typedef struct _CPUFreqMonitorClass   CPUFreqMonitorClass;
+typedef struct _CPUFreqMonitor CPUFreqMonitor;
+typedef struct _CPUFreqMonitorClass CPUFreqMonitorClass;
 typedef struct _CPUFreqMonitorPrivate CPUFreqMonitorPrivate;
 
 struct _CPUFreqMonitor {
-    GObject parent;
+  GObject parent;
 
-    CPUFreqMonitorPrivate *priv;
+  CPUFreqMonitorPrivate *priv;
 };
 
 struct _CPUFreqMonitorClass {
-    GObjectClass parent_class;
+  GObjectClass parent_class;
 
-    gboolean  (* run)                       (CPUFreqMonitor *monitor);
-    GList    *(* get_available_frequencies) (CPUFreqMonitor *monitor);
-    GList    *(* get_available_governors)   (CPUFreqMonitor *monitor);
+  gboolean (*run)(CPUFreqMonitor *monitor);
+  GList *(*get_available_frequencies)(CPUFreqMonitor *monitor);
+  GList *(*get_available_governors)(CPUFreqMonitor *monitor);
 
-    /*< signals >*/
-    void      (* changed)                   (CPUFreqMonitor *monitor);
+  /*< signals >*/
+  void (*changed)(CPUFreqMonitor *monitor);
 };
 
-GType        cpufreq_monitor_get_type                  (void) G_GNUC_CONST;
+GType cpufreq_monitor_get_type(void) G_GNUC_CONST;
 
-void         cpufreq_monitor_run                       (CPUFreqMonitor *monitor);
-GList       *cpufreq_monitor_get_available_frequencies (CPUFreqMonitor *monitor);
-GList       *cpufreq_monitor_get_available_governors   (CPUFreqMonitor *monitor);
+void cpufreq_monitor_run(CPUFreqMonitor *monitor);
+GList *cpufreq_monitor_get_available_frequencies(CPUFreqMonitor *monitor);
+GList *cpufreq_monitor_get_available_governors(CPUFreqMonitor *monitor);
 
-guint        cpufreq_monitor_get_cpu                   (CPUFreqMonitor *monitor);
-void         cpufreq_monitor_set_cpu                   (CPUFreqMonitor *monitor,
-							guint           cpu);
-const gchar *cpufreq_monitor_get_governor              (CPUFreqMonitor *monitor);
-gint         cpufreq_monitor_get_frequency             (CPUFreqMonitor *monitor);
-gint         cpufreq_monitor_get_percentage            (CPUFreqMonitor *monitor);
+guint cpufreq_monitor_get_cpu(CPUFreqMonitor *monitor);
+void cpufreq_monitor_set_cpu(CPUFreqMonitor *monitor, guint cpu);
+const gchar *cpufreq_monitor_get_governor(CPUFreqMonitor *monitor);
+gint cpufreq_monitor_get_frequency(CPUFreqMonitor *monitor);
+gint cpufreq_monitor_get_percentage(CPUFreqMonitor *monitor);
 
 G_END_DECLS
 

@@ -27,47 +27,46 @@
 
 G_BEGIN_DECLS
 
-#define DRIVE_TYPE_LIST         (drive_list_get_type ())
-#define DRIVE_LIST(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), DRIVE_TYPE_LIST, DriveList))
-#define DRIVE_LIST_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), DRIVE_TYPE_LIST, DriveListClass))
-#define DRIVE_IS_LIST(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), DRIVE_TYPE_LIST))
-#define DRIVE_IS_LIST_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), DRIVE_TYPE_LIST))
-#define DRIVE_LIST_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), DRIVE_TYPE_LIST, DriveListClass))
+#define DRIVE_TYPE_LIST (drive_list_get_type())
+#define DRIVE_LIST(o) \
+  (G_TYPE_CHECK_INSTANCE_CAST((o), DRIVE_TYPE_LIST, DriveList))
+#define DRIVE_LIST_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_CAST((k), DRIVE_TYPE_LIST, DriveListClass))
+#define DRIVE_IS_LIST(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), DRIVE_TYPE_LIST))
+#define DRIVE_IS_LIST_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), DRIVE_TYPE_LIST))
+#define DRIVE_LIST_GET_CLASS(o) \
+  (G_TYPE_INSTANCE_GET_CLASS((o), DRIVE_TYPE_LIST, DriveListClass))
 
-typedef struct _DriveList      DriveList;
+typedef struct _DriveList DriveList;
 typedef struct _DriveListClass DriveListClass;
 
-struct _DriveList
-{
-    GtkGrid parent;
+struct _DriveList {
+  GtkGrid parent;
 
-    GHashTable *volumes;
-    GHashTable *mounts;
-    GtkOrientation orientation;
-    guint layout_tag;
-    GtkReliefStyle relief;
-    GtkWidget *dummy;
-    gint count;
+  GHashTable *volumes;
+  GHashTable *mounts;
+  GtkOrientation orientation;
+  guint layout_tag;
+  GtkReliefStyle relief;
+  GtkWidget *dummy;
+  gint count;
 
-    GSettings *settings;
+  GSettings *settings;
 
-    int icon_size;
+  int icon_size;
 };
 
-struct _DriveListClass
-{
-    GtkGridClass parent_class;
+struct _DriveListClass {
+  GtkGridClass parent_class;
 };
 
-GType      drive_list_get_type (void);
-GtkWidget *drive_list_new (void);
-void       drive_list_set_orientation (DriveList *list,
-                                       GtkOrientation orientation);
-void       drive_list_set_panel_size  (DriveList *list,
-                                       int panel_size);
-void       drive_list_set_transparent (DriveList *self,
-                                       gboolean transparent);
-void       drive_list_redraw (DriveList *self);
-void       settings_color_changed (GSettings *settings, gchar *key, DriveList *drive_list);
+GType drive_list_get_type(void);
+GtkWidget *drive_list_new(void);
+void drive_list_set_orientation(DriveList *list, GtkOrientation orientation);
+void drive_list_set_panel_size(DriveList *list, int panel_size);
+void drive_list_set_transparent(DriveList *self, gboolean transparent);
+void drive_list_redraw(DriveList *self);
+void settings_color_changed(GSettings *settings, gchar *key,
+                            DriveList *drive_list);
 
 #endif /* DRIVE_LIST_H */

@@ -13,7 +13,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ USA.
  *
  $Id$
  */
@@ -21,13 +22,12 @@
 #ifndef _battstat_h_
 #define _battstat_h_
 
+#include <gio/gio.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gio/gio.h>
-
-#include <mate-panel-applet.h>
 #include <mate-panel-applet-gsettings.h>
+#include <mate-panel-applet.h>
 
 #define DEBUG 0
 
@@ -39,15 +39,13 @@
 #define ORANGE_MULTIPLIER 1.5
 #define YELLOW_MULTIPLIER 2.5
 
-typedef enum
-{
+typedef enum {
   APPLET_SHOW_NONE = 0,
   APPLET_SHOW_PERCENT,
   APPLET_SHOW_TIME
 } AppletTextType;
 
-typedef enum
-{
+typedef enum {
   STATUS_PIXMAP_BATTERY,
   STATUS_PIXMAP_METER,
   STATUS_PIXMAP_AC,
@@ -56,24 +54,21 @@ typedef enum
   STATUS_PIXMAP_NUM
 } StatusPixmapIndex;
 
-typedef enum
-{
+typedef enum {
   POWER_STATUS_OFF = 0,
   POWER_STATUS_ON,
   POWER_STATUS_UNKNOWN
 } PowerStatus;
 
-typedef struct
-{
+typedef struct {
   PowerStatus on_ac_power;
   PowerStatus charging;
-  gboolean    present;
-  gint        minutes;
-  gint        percent;
+  gboolean present;
+  gint minutes;
+  gint percent;
 } BatteryStatus;
 
-typedef enum
-{
+typedef enum {
   LAYOUT_NONE,
   LAYOUT_LONG,
   LAYOUT_TOPLEFT,
@@ -84,8 +79,7 @@ typedef enum
   LAYOUT_BOTTOM
 } LayoutLocation;
 
-typedef struct
-{
+typedef struct {
   LayoutLocation status;
   LayoutLocation text;
   LayoutLocation battery;
@@ -140,24 +134,24 @@ typedef struct _ProgressData {
   int timeout;
 
   /* last_* for the benefit of the check_for_updates function */
-  guint             last_batt_life;
+  guint last_batt_life;
   StatusPixmapIndex last_pixmap_index;
-  PowerStatus       last_acline_status;
-  PowerStatus       last_charging;
-  gboolean          last_present;
-  guint             last_minutes;
+  PowerStatus last_acline_status;
+  PowerStatus last_charging;
+  gboolean last_present;
+  guint last_minutes;
 } ProgressData;
 
 /* battstat_applet.c */
-void reconfigure_layout (ProgressData *battstat);
-void battstat_show_help (ProgressData *battstat, const char *section);
-void prop_cb (GtkAction *, ProgressData *);
+void reconfigure_layout(ProgressData *battstat);
+void battstat_show_help(ProgressData *battstat, const char *section);
+void prop_cb(GtkAction *, ProgressData *);
 
 /* power-management.c */
-const char *power_management_getinfo (BatteryStatus *status);
-const char *power_management_initialise (void (*callback) (void));
-void power_management_cleanup (void);
+const char *power_management_getinfo(BatteryStatus *status);
+const char *power_management_initialise(void (*callback)(void));
+void power_management_cleanup(void);
 
-gboolean power_management_using_upower (void);
+gboolean power_management_using_upower(void);
 
 #endif /* _battstat_h_ */

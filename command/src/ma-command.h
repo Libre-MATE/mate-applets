@@ -23,20 +23,16 @@
 
 G_BEGIN_DECLS
 
-#define MA_TYPE_COMMAND (ma_command_get_type ())
-G_DECLARE_FINAL_TYPE (MaCommand, ma_command, MA, COMMAND, GObject)
+#define MA_TYPE_COMMAND (ma_command_get_type())
+G_DECLARE_FINAL_TYPE(MaCommand, ma_command, MA, COMMAND, GObject)
 
-MaCommand *ma_command_new        (const gchar          *command,
-                                  GError              **error);
+MaCommand *ma_command_new(const gchar *command, GError **error);
 
-void       ma_command_run_async  (MaCommand            *command,
-                                  GCancellable         *cancellable,
-                                  GAsyncReadyCallback   callback,
-                                  gpointer              user_data);
+void ma_command_run_async(MaCommand *command, GCancellable *cancellable,
+                          GAsyncReadyCallback callback, gpointer user_data);
 
-gchar     *ma_command_run_finish (MaCommand            *command,
-                                  GAsyncResult         *result,
-                                  GError              **error);
+gchar *ma_command_run_finish(MaCommand *command, GAsyncResult *result,
+                             GError **error);
 
 G_END_DECLS
 

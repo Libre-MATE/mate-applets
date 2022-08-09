@@ -3,37 +3,37 @@
 #ifndef __CHARPICK_H__
 #define __CHARPICK_H__
 
+#include <gio/gio.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gio/gio.h>
-#include <mate-panel-applet.h>
 #include <mate-panel-applet-gsettings.h>
+#include <mate-panel-applet.h>
 
 #define NO_LAST_INDEX -1
 
 typedef struct _charpick_data charpick_data;
 /* this type has basically all data for this program */
 struct _charpick_data {
-    GList           *chartable;
-    gchar           *charlist;  
-    gunichar         selected_unichar;
-    gint             last_index;
-    GtkWidget       *box;
-    GtkWidget       *frame;
-    GtkWidget       *applet;
-    GtkWidget       *invisible;
-    GtkToggleButton *last_toggle_button;
-    gint             panel_size;
-    gboolean         panel_vertical;
-    GtkWidget       *propwindow;
-    GtkWidget       *about_dialog;
-    GtkWidget       *pref_tree;
-    GtkWidget       *menu;
-    GtkWidget       *add_edit_dialog;
-    GtkWidget       *add_edit_entry;
-    GSettings       *settings;
-    guint           rebuild_id;
+  GList *chartable;
+  gchar *charlist;
+  gunichar selected_unichar;
+  gint last_index;
+  GtkWidget *box;
+  GtkWidget *frame;
+  GtkWidget *applet;
+  GtkWidget *invisible;
+  GtkToggleButton *last_toggle_button;
+  gint panel_size;
+  gboolean panel_vertical;
+  GtkWidget *propwindow;
+  GtkWidget *about_dialog;
+  GtkWidget *pref_tree;
+  GtkWidget *menu;
+  GtkWidget *add_edit_dialog;
+  GtkWidget *add_edit_entry;
+  GSettings *settings;
+  guint rebuild_id;
 };
 
 typedef struct _charpick_button_cb_data charpick_button_cb_data;
@@ -41,26 +41,22 @@ typedef struct _charpick_button_cb_data charpick_button_cb_data;
 
 struct _charpick_button_cb_data {
   gint button_index;
-  charpick_data * p_curr_data;
+  charpick_data *p_curr_data;
 };
 
-void start_callback_update (void);
-void register_stock_for_edit (void);
+void start_callback_update(void);
+void register_stock_for_edit(void);
 
-void build_table (charpick_data *curr_data);
-void add_to_popup_menu (charpick_data *curr_data);
-void populate_menu (charpick_data *curr_data);
-void save_chartable (charpick_data *curr_data);
-void show_preferences_dialog (GtkAction     *action,
-                              charpick_data *curr_data);
+void build_table(charpick_data *curr_data);
+void add_to_popup_menu(charpick_data *curr_data);
+void populate_menu(charpick_data *curr_data);
+void save_chartable(charpick_data *curr_data);
+void show_preferences_dialog(GtkAction *action, charpick_data *curr_data);
 
-void add_edit_dialog_create (charpick_data *curr_data,
-                             gchar         *string,
-                             gchar         *title);
-void set_atk_name_description (GtkWidget         *widget,
-                               const char        *name,
-                               const char        *description);
-gboolean key_writable (MatePanelApplet *applet,
-                       const char *key);
+void add_edit_dialog_create(charpick_data *curr_data, gchar *string,
+                            gchar *title);
+void set_atk_name_description(GtkWidget *widget, const char *name,
+                              const char *description);
+gboolean key_writable(MatePanelApplet *applet, const char *key);
 
-#endif	/* __CHARPICK_H__ */
+#endif /* __CHARPICK_H__ */

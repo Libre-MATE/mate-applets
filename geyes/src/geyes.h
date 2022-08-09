@@ -18,65 +18,61 @@
 #ifndef __GEYES_H__
 #define __GEYES_H__
 
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gio/gio.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
-#include <gio/gio.h>
 #include <mate-panel-applet.h>
 
 #define MAX_EYES 1000
 #define GEYES_SETTINGS_SCHEMA "org.mate.panel.applet.geyes"
 #define GEYES_SETTINGS_THEME_PATH_KEY "theme-path"
 
-typedef struct
-{
-    GtkWidget *pbox;
+typedef struct {
+  GtkWidget *pbox;
 
-    gint selected_row;
+  gint selected_row;
 } EyesPropertyBox;
 
-typedef struct
-{
-    /* Applet */
-    MatePanelApplet *applet;
-    GtkWidget       *vbox;
-    GtkWidget       *hbox;
-    GtkWidget      **eyes;
-    guint            timeout_id;
-    gint            *pointer_last_x;
-    gint            *pointer_last_y;
+typedef struct {
+  /* Applet */
+  MatePanelApplet *applet;
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget **eyes;
+  guint timeout_id;
+  gint *pointer_last_x;
+  gint *pointer_last_y;
 
-    /* Theme */
-    GdkPixbuf       *eye_image;
-    GdkPixbuf       *pupil_image;
-    gchar           *theme_dir;
-    gchar           *theme_name;
-    gchar           *eye_filename;
-    gchar           *pupil_filename;
-    gsize            num_eyes;
-    gint             eye_height;
-    gint             eye_width;
-    gint             pupil_height;
-    gint             pupil_width;
-    gint             wall_thickness;
+  /* Theme */
+  GdkPixbuf *eye_image;
+  GdkPixbuf *pupil_image;
+  gchar *theme_dir;
+  gchar *theme_name;
+  gchar *eye_filename;
+  gchar *pupil_filename;
+  gsize num_eyes;
+  gint eye_height;
+  gint eye_width;
+  gint pupil_height;
+  gint pupil_width;
+  gint wall_thickness;
 
-    /* Properties */
-    EyesPropertyBox  prop_box;
+  /* Properties */
+  EyesPropertyBox prop_box;
 
-    /* Settings */
-    GSettings       *settings;
+  /* Settings */
+  GSettings *settings;
 } EyesApplet;
 
 /* eyes.c */
-void   setup_eyes         (EyesApplet  *eyes_applet);
-void   destroy_eyes       (EyesApplet  *eyes_applet);
+void setup_eyes(EyesApplet *eyes_applet);
+void destroy_eyes(EyesApplet *eyes_applet);
 
 /* theme.c */
-void    theme_dirs_create (void);
-int     load_theme        (EyesApplet  *eyes_applet,
-                           const gchar *theme_dir);
-void    properties_cb     (GtkAction   *action,
-                           EyesApplet  *eyes_applet);
+void theme_dirs_create(void);
+int load_theme(EyesApplet *eyes_applet, const gchar *theme_dir);
+void properties_cb(GtkAction *action, EyesApplet *eyes_applet);
 
 #endif

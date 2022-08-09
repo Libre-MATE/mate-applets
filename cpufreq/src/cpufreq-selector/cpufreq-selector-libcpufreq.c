@@ -14,196 +14,161 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
-
-#include <glib.h>
-#include <glib/gstdio.h>
-#include <cpufreq.h>
-#include <stdlib.h>
-#include <linux/version.h>
 
 #include "cpufreq-selector-libcpufreq.h"
 
-static gboolean
-cpufreq_selector_libcpufreq_set_frequency (CPUFreqSelector           *selector,
-                                           guint                      frequency,
-                                           GError                   **error);
+#include <cpufreq.h>
+#include <glib.h>
+#include <glib/gstdio.h>
+#include <linux/version.h>
+#include <stdlib.h>
 
-static gboolean
-cpufreq_selector_libcpufreq_set_governor  (CPUFreqSelector           *selector,
-                                           const gchar               *governor,
-                                           GError                   **error);
+static gboolean cpufreq_selector_libcpufreq_set_frequency(
+    CPUFreqSelector *selector, guint frequency, GError **error);
 
-G_DEFINE_TYPE (CPUFreqSelectorLibcpufreq, cpufreq_selector_libcpufreq, CPUFREQ_TYPE_SELECTOR)
+static gboolean cpufreq_selector_libcpufreq_set_governor(
+    CPUFreqSelector *selector, const gchar *governor, GError **error);
+
+G_DEFINE_TYPE(CPUFreqSelectorLibcpufreq, cpufreq_selector_libcpufreq,
+              CPUFREQ_TYPE_SELECTOR)
 
 #ifdef HAVE_GET_FREQUENCIES
 typedef struct cpufreq_frequencies CPUFreqFrequencyList;
-#define cpufreq_get_available_frequencies(cpu) cpufreq_get_frequencies ("available", cpu)
-#define cpufreq_put_available_frequencies(first) cpufreq_put_frequencies (first)
+#define cpufreq_get_available_frequencies(cpu) \
+  cpufreq_get_frequencies("available", cpu)
+#define cpufreq_put_available_frequencies(first) cpufreq_put_frequencies(first)
 #else
 typedef struct cpufreq_available_frequencies CPUFreqFrequencyList;
 #endif
 
-typedef struct cpufreq_policy                CPUFreqPolicy;
-typedef struct cpufreq_available_governors   CPUFreqGovernorList;
+typedef struct cpufreq_policy CPUFreqPolicy;
+typedef struct cpufreq_available_governors CPUFreqGovernorList;
 
-static void
-cpufreq_selector_libcpufreq_init (CPUFreqSelectorLibcpufreq *selector)
-{
+static void cpufreq_selector_libcpufreq_init(
+    CPUFreqSelectorLibcpufreq *selector) {}
+
+static void cpufreq_selector_libcpufreq_class_init(
+    CPUFreqSelectorLibcpufreqClass *klass) {
+  CPUFreqSelectorClass *selector_class = CPUFREQ_SELECTOR_CLASS(klass);
+
+  selector_class->set_frequency = cpufreq_selector_libcpufreq_set_frequency;
+  selector_class->set_governor = cpufreq_selector_libcpufreq_set_governor;
 }
 
-static void
-cpufreq_selector_libcpufreq_class_init (CPUFreqSelectorLibcpufreqClass *klass)
-{
-    CPUFreqSelectorClass *selector_class = CPUFREQ_SELECTOR_CLASS (klass);
+CPUFreqSelector *cpufreq_selector_libcpufreq_new(guint cpu) {
+  CPUFreqSelector *selector;
 
-    selector_class->set_frequency = cpufreq_selector_libcpufreq_set_frequency;
-    selector_class->set_governor = cpufreq_selector_libcpufreq_set_governor;
+  selector = CPUFREQ_SELECTOR(
+      g_object_new(CPUFREQ_TYPE_SELECTOR_LIBCPUFREQ, "cpu", cpu, NULL));
+
+  return selector;
 }
 
-CPUFreqSelector *
-cpufreq_selector_libcpufreq_new (guint cpu)
-{
-    CPUFreqSelector *selector;
+static guint cpufreq_selector_libcpufreq_get_valid_frequency(
+    CPUFreqSelectorLibcpufreq *selector, guint frequency) {
+  guint cpu;
+  gint dist = G_MAXINT;
+  guint retval = 0;
+  CPUFreqFrequencyList *freqs, *freq;
 
-    selector = CPUFREQ_SELECTOR (g_object_new (CPUFREQ_TYPE_SELECTOR_LIBCPUFREQ,
-                                               "cpu", cpu,
-                                               NULL));
+  g_object_get(G_OBJECT(selector), "cpu", &cpu, NULL);
 
-    return selector;
-}
+  freqs = cpufreq_get_available_frequencies(cpu);
+  if (!freqs) return 0;
 
-static guint
-cpufreq_selector_libcpufreq_get_valid_frequency (CPUFreqSelectorLibcpufreq *selector,
-                                                 guint                      frequency)
-{
-    guint                 cpu;
-    gint                  dist = G_MAXINT;
-    guint                 retval = 0;
-    CPUFreqFrequencyList *freqs, *freq;
+  for (freq = freqs; freq; freq = freq->next) {
+    guint current_dist;
 
-    g_object_get (G_OBJECT (selector),
-                  "cpu", &cpu,
-                  NULL);
+    if (freq->frequency == frequency) {
+      cpufreq_put_available_frequencies(freqs);
 
-    freqs = cpufreq_get_available_frequencies (cpu);
-    if (!freqs)
-        return 0;
-
-    for (freq = freqs; freq; freq = freq->next) {
-        guint current_dist;
-
-        if (freq->frequency == frequency) {
-            cpufreq_put_available_frequencies (freqs);
-
-            return frequency;
-        }
-
-        current_dist = abs ((int)freq->frequency - (int)frequency);
-        if (current_dist < dist) {
-            dist = current_dist;
-            retval = freq->frequency;
-        }
+      return frequency;
     }
 
-    return retval;
+    current_dist = abs((int)freq->frequency - (int)frequency);
+    if (current_dist < dist) {
+      dist = current_dist;
+      retval = freq->frequency;
+    }
+  }
+
+  return retval;
 }
 
-static gboolean
-cpufreq_selector_libcpufreq_set_frequency (CPUFreqSelector *selector,
-                                           guint            frequency,
-                                           GError         **error)
-{
-    guint freq;
-    guint cpu;
+static gboolean cpufreq_selector_libcpufreq_set_frequency(
+    CPUFreqSelector *selector, guint frequency, GError **error) {
+  guint freq;
+  guint cpu;
 
-    g_object_get (G_OBJECT (selector),
-                  "cpu", &cpu,
-                  NULL);
+  g_object_get(G_OBJECT(selector), "cpu", &cpu, NULL);
 
-    freq = cpufreq_selector_libcpufreq_get_valid_frequency (CPUFREQ_SELECTOR_LIBCPUFREQ (selector),
-                                                            frequency);
-    if (cpufreq_set_frequency (cpu, freq) != 0) {
-        g_set_error (error,
-                     CPUFREQ_SELECTOR_ERROR,
-                     SELECTOR_ERROR_SET_FREQUENCY,
-                     "Cannot set frequency '%d'",
-                     frequency);
-
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
-static gboolean
-cpufreq_selector_libcpufreq_validate_governor (CPUFreqSelectorLibcpufreq *selector,
-                                               const gchar               *governor)
-{
-    guint                cpu;
-    CPUFreqGovernorList *govs, *gov;
-
-    g_object_get (G_OBJECT (selector),
-                  "cpu", &cpu,
-                  NULL);
-
-    govs = cpufreq_get_available_governors (cpu);
-    if (!govs)
-        return FALSE;
-
-    for (gov = govs; gov; gov = gov->next) {
-        if (g_ascii_strcasecmp (gov->governor, governor) == 0) {
-            cpufreq_put_available_governors (govs);
-
-            return TRUE;
-        }
-    }
-
-    cpufreq_put_available_governors (govs);
+  freq = cpufreq_selector_libcpufreq_get_valid_frequency(
+      CPUFREQ_SELECTOR_LIBCPUFREQ(selector), frequency);
+  if (cpufreq_set_frequency(cpu, freq) != 0) {
+    g_set_error(error, CPUFREQ_SELECTOR_ERROR, SELECTOR_ERROR_SET_FREQUENCY,
+                "Cannot set frequency '%d'", frequency);
 
     return FALSE;
+  }
+
+  return TRUE;
 }
 
-static gboolean
-cpufreq_selector_libcpufreq_set_governor (CPUFreqSelector *selector,
-                                          const gchar     *governor,
-                                          GError         **error)
-{
-    CPUFreqSelectorLibcpufreq *selector_libcpufreq;
-    guint                      cpu;
+static gboolean cpufreq_selector_libcpufreq_validate_governor(
+    CPUFreqSelectorLibcpufreq *selector, const gchar *governor) {
+  guint cpu;
+  CPUFreqGovernorList *govs, *gov;
 
-    selector_libcpufreq = CPUFREQ_SELECTOR_LIBCPUFREQ (selector);
+  g_object_get(G_OBJECT(selector), "cpu", &cpu, NULL);
 
-    if (!cpufreq_selector_libcpufreq_validate_governor (selector_libcpufreq, governor)) {
-        g_set_error (error,
-                     CPUFREQ_SELECTOR_ERROR,
-                     SELECTOR_ERROR_INVALID_GOVERNOR,
-                     "Invalid governor '%s'",
-                     governor);
+  govs = cpufreq_get_available_governors(cpu);
+  if (!govs) return FALSE;
 
-        return FALSE;
+  for (gov = govs; gov; gov = gov->next) {
+    if (g_ascii_strcasecmp(gov->governor, governor) == 0) {
+      cpufreq_put_available_governors(govs);
+
+      return TRUE;
     }
+  }
 
-    g_object_get (G_OBJECT (selector),
-                  "cpu", &cpu,
-                  NULL);
+  cpufreq_put_available_governors(govs);
 
-    if (cpufreq_modify_policy_governor (cpu, (gchar *)governor) != 0) {
-        g_set_error (error,
-                     CPUFREQ_SELECTOR_ERROR,
-                     SELECTOR_ERROR_INVALID_GOVERNOR,
-                     "Invalid governor '%s'",
-                     governor);
+  return FALSE;
+}
 
-        return FALSE;
-    }
+static gboolean cpufreq_selector_libcpufreq_set_governor(
+    CPUFreqSelector *selector, const gchar *governor, GError **error) {
+  CPUFreqSelectorLibcpufreq *selector_libcpufreq;
+  guint cpu;
 
-    return TRUE;
+  selector_libcpufreq = CPUFREQ_SELECTOR_LIBCPUFREQ(selector);
+
+  if (!cpufreq_selector_libcpufreq_validate_governor(selector_libcpufreq,
+                                                     governor)) {
+    g_set_error(error, CPUFREQ_SELECTOR_ERROR, SELECTOR_ERROR_INVALID_GOVERNOR,
+                "Invalid governor '%s'", governor);
+
+    return FALSE;
+  }
+
+  g_object_get(G_OBJECT(selector), "cpu", &cpu, NULL);
+
+  if (cpufreq_modify_policy_governor(cpu, (gchar *)governor) != 0) {
+    g_set_error(error, CPUFREQ_SELECTOR_ERROR, SELECTOR_ERROR_INVALID_GOVERNOR,
+                "Invalid governor '%s'", governor);
+
+    return FALSE;
+  }
+
+  return TRUE;
 }

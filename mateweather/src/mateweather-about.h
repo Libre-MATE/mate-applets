@@ -19,9 +19,8 @@
 
 G_BEGIN_DECLS
 
-extern void mateweather_about_run (MateWeatherApplet *gw_applet);
+extern void mateweather_about_run(MateWeatherApplet *gw_applet);
 
 G_END_DECLS
 
 #endif /* __MATEWEATHER_ABOUT_H_ */
-

@@ -22,10 +22,10 @@
 
 #include "netspeed.h"
 
-#define NETSPEED_TYPE_PREFERENCES netspeed_preferences_get_type ()
-G_DECLARE_FINAL_TYPE (NetspeedPreferences, netspeed_preferences,
-                      NETSPEED, PREFERENCES, GtkDialog)
+#define NETSPEED_TYPE_PREFERENCES netspeed_preferences_get_type()
+G_DECLARE_FINAL_TYPE(NetspeedPreferences, netspeed_preferences, NETSPEED,
+                     PREFERENCES, GtkDialog)
 
-GtkWidget *netspeed_preferences_new (NetspeedApplet *netspeed);
+GtkWidget *netspeed_preferences_new(NetspeedApplet *netspeed);
 
 #endif

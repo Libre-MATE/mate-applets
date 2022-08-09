@@ -20,11 +20,10 @@
 G_BEGIN_DECLS
 
 extern void mateweather_applet_create(MateWeatherApplet *gw_applet);
-extern gint timeout_cb (gpointer data);
-extern gint suncalc_timeout_cb (gpointer data);
-extern void mateweather_update (MateWeatherApplet *applet);
+extern gint timeout_cb(gpointer data);
+extern gint suncalc_timeout_cb(gpointer data);
+extern void mateweather_update(MateWeatherApplet *applet);
 
 G_END_DECLS
 
 #endif /* __MATEWEATHER_APPLET_H_ */
-

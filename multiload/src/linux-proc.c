@@ -1,28 +1,29 @@
 /* From wmload.c, v0.9.2, licensed under the GPL. */
+#ifdef HAVE_CONFIG_H
 #include <config.h>
-#include <sys/types.h>
-#include <sys/statvfs.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-#include <glibtop.h>
-#include <glibtop/cpu.h>
-#include <glibtop/mem.h>
-#include <glibtop/swap.h>
-#include <glibtop/loadavg.h>
-#include <glibtop/netload.h>
-#include <glibtop/netlist.h>
-#include <glibtop/mountlist.h>
-#include <glibtop/fsusage.h>
+#endif
 
 #include "linux-proc.h"
+
+#include <fcntl.h>
+#include <glibtop.h>
+#include <glibtop/cpu.h>
+#include <glibtop/fsusage.h>
+#include <glibtop/loadavg.h>
+#include <glibtop/mem.h>
+#include <glibtop/mountlist.h>
+#include <glibtop/netlist.h>
+#include <glibtop/netload.h>
+#include <glibtop/swap.h>
+#include <sys/statvfs.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "autoscaler.h"
 
 static const unsigned needed_cpu_flags =
-(1 << GLIBTOP_CPU_USER) +
-(1 << GLIBTOP_CPU_IDLE) +
-(1 << GLIBTOP_CPU_SYS) +
-(1 << GLIBTOP_CPU_NICE);
+    (1 << GLIBTOP_CPU_USER) + (1 << GLIBTOP_CPU_IDLE) + (1 << GLIBTOP_CPU_SYS) +
+    (1 << GLIBTOP_CPU_NICE);
 
 #if 0
 static const unsigned needed_page_flags =
@@ -31,178 +32,160 @@ static const unsigned needed_page_flags =
 #endif
 
 static const unsigned needed_mem_flags =
-(1 << GLIBTOP_MEM_USED) +
-(1 << GLIBTOP_MEM_FREE);
+    (1 << GLIBTOP_MEM_USED) + (1 << GLIBTOP_MEM_FREE);
 
 static const unsigned needed_swap_flags =
-(1 << GLIBTOP_SWAP_USED) +
-(1 << GLIBTOP_SWAP_FREE);
+    (1 << GLIBTOP_SWAP_USED) + (1 << GLIBTOP_SWAP_FREE);
 
-static const unsigned needed_loadavg_flags =
-(1 << GLIBTOP_LOADAVG_LOADAVG);
+static const unsigned needed_loadavg_flags = (1 << GLIBTOP_LOADAVG_LOADAVG);
 
 static const unsigned needed_netload_flags =
-(1 << GLIBTOP_NETLOAD_IF_FLAGS) +
-(1 << GLIBTOP_NETLOAD_BYTES_TOTAL);
+    (1 << GLIBTOP_NETLOAD_IF_FLAGS) + (1 << GLIBTOP_NETLOAD_BYTES_TOTAL);
 
-void
-GetLoad (guint64    Maximum,
-         guint64    data [cpuload_n],
-         LoadGraph *g)
-{
-    MultiloadApplet *multiload;
-    glibtop_cpu cpu;
-    guint64 cpu_aux [cpuload_n], used = 0, total = 0;
-    guint64 current_scaled, used_scaled = 0;
-    unsigned i;
+void GetLoad(guint64 Maximum, guint64 data[cpuload_n], LoadGraph *g) {
+  MultiloadApplet *multiload;
+  glibtop_cpu cpu;
+  guint64 cpu_aux[cpuload_n], used = 0, total = 0;
+  guint64 current_scaled, used_scaled = 0;
+  unsigned i;
 
-    glibtop_get_cpu (&cpu);
+  glibtop_get_cpu(&cpu);
 
-    g_return_if_fail ((cpu.flags & needed_cpu_flags) == needed_cpu_flags);
+  g_return_if_fail((cpu.flags & needed_cpu_flags) == needed_cpu_flags);
 
-    multiload = g->multiload;
+  multiload = g->multiload;
 
-    multiload->cpu_time [cpuload_usr]    = cpu.user;
-    multiload->cpu_time [cpuload_nice]   = cpu.nice;
-    multiload->cpu_time [cpuload_sys]    = cpu.sys;
-    multiload->cpu_time [cpuload_iowait] = cpu.iowait + cpu.irq + cpu.softirq;
-    multiload->cpu_time [cpuload_free]   = cpu.idle;
+  multiload->cpu_time[cpuload_usr] = cpu.user;
+  multiload->cpu_time[cpuload_nice] = cpu.nice;
+  multiload->cpu_time[cpuload_sys] = cpu.sys;
+  multiload->cpu_time[cpuload_iowait] = cpu.iowait + cpu.irq + cpu.softirq;
+  multiload->cpu_time[cpuload_free] = cpu.idle;
 
-    if (!multiload->cpu_initialized) {
-        memcpy (multiload->cpu_last, multiload->cpu_time, sizeof (multiload->cpu_last));
-        multiload->cpu_initialized = TRUE;
-    }
+  if (!multiload->cpu_initialized) {
+    memcpy(multiload->cpu_last, multiload->cpu_time,
+           sizeof(multiload->cpu_last));
+    multiload->cpu_initialized = TRUE;
+  }
 
-    for (i = 0; i < cpuload_n; i++) {
-        cpu_aux [i] = multiload->cpu_time [i] - multiload->cpu_last [i];
-        total += cpu_aux [i];
-    }
+  for (i = 0; i < cpuload_n; i++) {
+    cpu_aux[i] = multiload->cpu_time[i] - multiload->cpu_last[i];
+    total += cpu_aux[i];
+  }
 
-    for (i = 0; i < cpuload_free; i++) {
-        used += cpu_aux [i];
-        current_scaled = (guint64) ((float)(cpu_aux [i] * Maximum) / (float)total);
-        used_scaled += current_scaled;
-        data [i] = current_scaled;
-    }
-    data [cpuload_free] = Maximum - used_scaled;
+  for (i = 0; i < cpuload_free; i++) {
+    used += cpu_aux[i];
+    current_scaled = (guint64)((float)(cpu_aux[i] * Maximum) / (float)total);
+    used_scaled += current_scaled;
+    data[i] = current_scaled;
+  }
+  data[cpuload_free] = Maximum - used_scaled;
 
-    multiload->cpu_used_ratio = (float)(used) / (float)total;
+  multiload->cpu_used_ratio = (float)(used) / (float)total;
 
-    memcpy (multiload->cpu_last, multiload->cpu_time, sizeof multiload->cpu_last);
+  memcpy(multiload->cpu_last, multiload->cpu_time, sizeof multiload->cpu_last);
 }
 
-void
-GetDiskLoad (guint64    Maximum,
-             guint64    data [diskload_n],
-             LoadGraph *g)
-{
-    static gboolean first_call = TRUE;
-    static guint64 lastread = 0, lastwrite = 0;
-    static AutoScaler scaler;
+void GetDiskLoad(guint64 Maximum, guint64 data[diskload_n], LoadGraph *g) {
+  static gboolean first_call = TRUE;
+  static guint64 lastread = 0, lastwrite = 0;
+  static AutoScaler scaler;
 
-    guint64 max;
-    guint64 read, write;
-    guint64 readdiff, writediff;
-    guint   i;
+  guint64 max;
+  guint64 read, write;
+  guint64 readdiff, writediff;
+  guint i;
 
-    MultiloadApplet *multiload;
+  MultiloadApplet *multiload;
 
-    multiload = g->multiload;
+  multiload = g->multiload;
 
-    if(first_call)
-    {
-        autoscaler_init (&scaler, g->speed, 500);
+  if (first_call) {
+    autoscaler_init(&scaler, g->speed, 500);
+  }
+
+  read = write = 0;
+
+  if (multiload->nvme_diskstats) {
+    FILE *fdr;
+    char line[255];
+    guint64 s_read, s_write;
+
+    fdr = fopen("/proc/diskstats", "r");
+    if (!fdr) {
+      multiload->nvme_diskstats = FALSE;
+      g_settings_set_boolean(multiload->settings, "diskload-nvme-diskstats",
+                             FALSE);
+      return;
     }
 
-    read = write = 0;
+    while (fgets(line, 255, fdr)) {
+      /* Match main device, rather than individual partitions (e.g. nvme0n1) */
+      if (!g_regex_match_simple("\\snvme\\d+\\w+\\d+\\s", line, 0, 0)) {
+        continue;
+      }
 
-    if (multiload->nvme_diskstats)
-    {
-        FILE *fdr;
-        char line[255];
-        guint64 s_read, s_write;
-
-        fdr = fopen("/proc/diskstats", "r");
-        if (!fdr)
-        {
-            multiload->nvme_diskstats = FALSE;
-            g_settings_set_boolean (multiload->settings, "diskload-nvme-diskstats", FALSE);
-            return;
-        }
-
-        while (fgets(line, 255, fdr))
-        {
-            /* Match main device, rather than individual partitions (e.g. nvme0n1) */
-            if (!g_regex_match_simple("\\snvme\\d+\\w+\\d+\\s", line, 0, 0))
-            {
-                continue;
-            }
-
-            /*
-               6 - sectors read
-               10 - sectors written
-               */
-            if (sscanf(line, "%*d %*d %*s %*d %*d %ld %*d %*d %*d %ld", &s_read, &s_write) == 2)
-            {
-                read += 512 * s_read;
-                write += 512 * s_write;
-            }
-        }
-        fclose(fdr);
+      /*
+         6 - sectors read
+         10 - sectors written
+         */
+      if (sscanf(line, "%*d %*d %*s %*d %*d %ld %*d %*d %*d %ld", &s_read,
+                 &s_write) == 2) {
+        read += 512 * s_read;
+        write += 512 * s_write;
+      }
     }
-    else
-    {
-        glibtop_mountlist mountlist;
-        glibtop_mountentry *mountentries;
+    fclose(fdr);
+  } else {
+    glibtop_mountlist mountlist;
+    glibtop_mountentry *mountentries;
 
-        mountentries = glibtop_get_mountlist (&mountlist, FALSE);
+    mountentries = glibtop_get_mountlist(&mountlist, FALSE);
 
-        for (i = 0; i < mountlist.number; i++)
-        {
-            struct statvfs statresult;
-            glibtop_fsusage fsusage;
+    for (i = 0; i < mountlist.number; i++) {
+      struct statvfs statresult;
+      glibtop_fsusage fsusage;
 
-            if (strstr (mountentries[i].devname, "/dev/") == NULL)
-                continue;
+      if (strstr(mountentries[i].devname, "/dev/") == NULL) continue;
 
-            if (strstr (mountentries[i].mountdir, "/media/") != NULL)
-                continue;
+      if (strstr(mountentries[i].mountdir, "/media/") != NULL) continue;
 
-            if (statvfs (mountentries[i].mountdir, &statresult) < 0)
-            {
-                g_debug ("Failed to get statistics for mount entry: %s. Reason: %s. Skipping entry.",
-                         mountentries[i].mountdir, strerror(errno));
-                continue;
-            }
+      if (statvfs(mountentries[i].mountdir, &statresult) < 0) {
+        g_debug(
+            "Failed to get statistics for mount entry: %s. Reason: %s. "
+            "Skipping entry.",
+            mountentries[i].mountdir, strerror(errno));
+        continue;
+      }
 
-            glibtop_get_fsusage(&fsusage, mountentries[i].mountdir);
-            read += fsusage.read;
-            write += fsusage.write;
-        }
-
-        g_free(mountentries);
+      glibtop_get_fsusage(&fsusage, mountentries[i].mountdir);
+      read += fsusage.read;
+      write += fsusage.write;
     }
 
-    readdiff  = read - lastread;
-    writediff = write - lastwrite;
+    g_free(mountentries);
+  }
 
-    lastread  = read;
-    lastwrite = write;
+  readdiff = read - lastread;
+  writediff = write - lastwrite;
 
-    if(first_call)
-    {
-        first_call = FALSE;
-        memset(data, 0, 3 * sizeof data[0]);
-        return;
-    }
+  lastread = read;
+  lastwrite = write;
 
-    max = autoscaler_get_max(&scaler, readdiff + writediff);
+  if (first_call) {
+    first_call = FALSE;
+    memset(data, 0, 3 * sizeof data[0]);
+    return;
+  }
 
-    multiload->diskload_used_ratio = (float)(readdiff + writediff) / (float)max;
+  max = autoscaler_get_max(&scaler, readdiff + writediff);
 
-    data [diskload_read]  = (guint64) ((float)Maximum *  (float)readdiff / (float)max);
-    data [diskload_write] = (guint64) ((float)Maximum * (float)writediff / (float)max);
-    data [diskload_free]  = Maximum - (data [0] + data[1]);
+  multiload->diskload_used_ratio = (float)(readdiff + writediff) / (float)max;
+
+  data[diskload_read] =
+      (guint64)((float)Maximum * (float)readdiff / (float)max);
+  data[diskload_write] =
+      (guint64)((float)Maximum * (float)writediff / (float)max);
+  data[diskload_free] = Maximum - (data[0] + data[1]);
 }
 
 /* GNU/Linux:
@@ -217,94 +200,83 @@ GetDiskLoad (guint64    Maximum,
  *   aux [memload_cached] = mem.cached;
  *   aux [memload_buffer] = mem.buffer;
  */
-void
-GetMemory (guint64    Maximum,
-           guint64    data [memload_n],
-           LoadGraph *g)
-{
-    MultiloadApplet *multiload;
-    glibtop_mem mem;
-    guint64 aux [memload_n], cache = 0;
-    guint64 current_scaled, used_scaled = 0;
-    int i;
+void GetMemory(guint64 Maximum, guint64 data[memload_n], LoadGraph *g) {
+  MultiloadApplet *multiload;
+  glibtop_mem mem;
+  guint64 aux[memload_n], cache = 0;
+  guint64 current_scaled, used_scaled = 0;
+  int i;
 
-    glibtop_get_mem (&mem);
+  glibtop_get_mem(&mem);
 
-    g_return_if_fail ((mem.flags & needed_mem_flags) == needed_mem_flags);
+  g_return_if_fail((mem.flags & needed_mem_flags) == needed_mem_flags);
 
 #ifndef __linux__
-    aux [memload_user]   = mem.user;
-    aux [memload_cached] = mem.cached;
+  aux[memload_user] = mem.user;
+  aux[memload_cached] = mem.cached;
 #else
-    aux [memload_user]   = mem.total - mem.free - mem.buffer - mem.cached;;
-    aux [memload_cached] = mem.cached - mem.shared;
+  aux[memload_user] = mem.total - mem.free - mem.buffer - mem.cached;
+  ;
+  aux[memload_cached] = mem.cached - mem.shared;
 #endif /* __linux__ */
-    aux [memload_shared] = mem.shared;
-    aux [memload_buffer] = mem.buffer;
+  aux[memload_shared] = mem.shared;
+  aux[memload_buffer] = mem.buffer;
 
-    for (i = 0; i < memload_free; i++) {
-        current_scaled = (guint64) ((float)(aux [i] * Maximum) / (float)mem.total);
-        if (i != memload_user) {
-            cache += aux [i];
-        }
-        used_scaled += current_scaled;
-        data [i] = current_scaled;
+  for (i = 0; i < memload_free; i++) {
+    current_scaled = (guint64)((float)(aux[i] * Maximum) / (float)mem.total);
+    if (i != memload_user) {
+      cache += aux[i];
     }
-    data [memload_free] = MAX (Maximum - used_scaled, 0);
+    used_scaled += current_scaled;
+    data[i] = current_scaled;
+  }
+  data[memload_free] = MAX(Maximum - used_scaled, 0);
 
-    multiload = g->multiload;
-    multiload->memload_user  = aux [memload_user];
-    multiload->memload_cache = cache;
-    multiload->memload_total = mem.total;
+  multiload = g->multiload;
+  multiload->memload_user = aux[memload_user];
+  multiload->memload_cache = cache;
+  multiload->memload_total = mem.total;
 }
 
-void
-GetSwap (guint64    Maximum,
-         guint64    data [swapload_n],
-         LoadGraph *g)
-{
-    guint64 used;
-    MultiloadApplet *multiload;
-    glibtop_swap swap;
+void GetSwap(guint64 Maximum, guint64 data[swapload_n], LoadGraph *g) {
+  guint64 used;
+  MultiloadApplet *multiload;
+  glibtop_swap swap;
 
-    glibtop_get_swap (&swap);
-    g_return_if_fail ((swap.flags & needed_swap_flags) == needed_swap_flags);
+  glibtop_get_swap(&swap);
+  g_return_if_fail((swap.flags & needed_swap_flags) == needed_swap_flags);
 
-    multiload = g->multiload;
+  multiload = g->multiload;
 
-    if (swap.total == 0) {
-        used = 0;
-        multiload->swapload_used_ratio = 0.0f;
-    }
-    else {
-        float ratio;
+  if (swap.total == 0) {
+    used = 0;
+    multiload->swapload_used_ratio = 0.0f;
+  } else {
+    float ratio;
 
-        ratio = (float)swap.used / (float)swap.total;
-        used = (guint64) ((float) Maximum * ratio);
-        multiload->swapload_used_ratio = ratio;
-    }
+    ratio = (float)swap.used / (float)swap.total;
+    used = (guint64)((float)Maximum * ratio);
+    multiload->swapload_used_ratio = ratio;
+  }
 
-    data [0] = used;
-    data [1] = Maximum - used;
+  data[0] = used;
+  data[1] = Maximum - used;
 }
 
-void
-GetLoadAvg (guint64    Maximum,
-            guint64    data [2],
-            LoadGraph *g)
-{
-    glibtop_loadavg loadavg;
-    MultiloadApplet *multiload;
+void GetLoadAvg(guint64 Maximum, guint64 data[2], LoadGraph *g) {
+  glibtop_loadavg loadavg;
+  MultiloadApplet *multiload;
 
-    glibtop_get_loadavg (&loadavg);
+  glibtop_get_loadavg(&loadavg);
 
-    g_return_if_fail ((loadavg.flags & needed_loadavg_flags) == needed_loadavg_flags);
+  g_return_if_fail((loadavg.flags & needed_loadavg_flags) ==
+                   needed_loadavg_flags);
 
-    multiload = g->multiload;
-    multiload->loadavg1 = loadavg.loadavg[0];
+  multiload = g->multiload;
+  multiload->loadavg1 = loadavg.loadavg[0];
 
-    data [0] = (guint64) ((float) Maximum * loadavg.loadavg[0]);
-    data [1] = Maximum - data[0];
+  data[0] = (guint64)((float)Maximum * loadavg.loadavg[0]);
+  data[1] = Maximum - data[0];
 }
 
 /*
@@ -312,119 +284,98 @@ GetLoadAvg (guint64    Maximum,
  * (ie: not corresponding to a physical device). In case it is a physical
  * device or unknown, returns false.
  */
-static gboolean
-is_net_device_virtual(char *device)
-{
-    /*
-     * There is not definitive way to find out. On some systems (Linux
-     * kernels ≳ 2.19 without option SYSFS_DEPRECATED), there exist a
-     * directory /sys/devices/virtual/net which only contains virtual
-     * devices.  It's also possible to detect by the fact that virtual
-     * devices do not have a symlink "device" in
-     * /sys/class/net/name-of-dev/ .  This second method is more complex
-     * but more reliable.
-     */
-    gboolean ret = FALSE;
-    char *path = malloc (strlen (device) + strlen ("/sys/class/net//device") + 1);
+static gboolean is_net_device_virtual(char *device) {
+  /*
+   * There is not definitive way to find out. On some systems (Linux
+   * kernels ≳ 2.19 without option SYSFS_DEPRECATED), there exist a
+   * directory /sys/devices/virtual/net which only contains virtual
+   * devices.  It's also possible to detect by the fact that virtual
+   * devices do not have a symlink "device" in
+   * /sys/class/net/name-of-dev/ .  This second method is more complex
+   * but more reliable.
+   */
+  gboolean ret = FALSE;
+  char *path = malloc(strlen(device) + strlen("/sys/class/net//device") + 1);
 
-    if (path == NULL)
-        return FALSE;
+  if (path == NULL) return FALSE;
 
-    /* Check if /sys/class/net/name-of-dev/ exists (may be old linux kernel
-     * or not linux at all). */
-    do {
-        if (sprintf(path, "/sys/class/net/%s", device) < 0)
-            break;
-        if (access(path, F_OK) != 0)
-            break; /* unknown */
+  /* Check if /sys/class/net/name-of-dev/ exists (may be old linux kernel
+   * or not linux at all). */
+  do {
+    if (sprintf(path, "/sys/class/net/%s", device) < 0) break;
+    if (access(path, F_OK) != 0) break; /* unknown */
 
-        if (sprintf(path, "/sys/class/net/%s/device", device) < 0)
-            break;
-        if (access(path, F_OK) != 0)
-            ret = TRUE;
-    } while (0);
+    if (sprintf(path, "/sys/class/net/%s/device", device) < 0) break;
+    if (access(path, F_OK) != 0) ret = TRUE;
+  } while (0);
 
-    free (path);
-    return ret;
+  free(path);
+  return ret;
 }
 
-void
-GetNet (guint64    Maximum,
-        guint64    data [4],
-        LoadGraph *g)
-{
-    enum Types {
-        IN_COUNT = 0,
-        OUT_COUNT = 1,
-        LOCAL_COUNT = 2,
-        COUNT_TYPES = 3
-    };
+void GetNet(guint64 Maximum, guint64 data[4], LoadGraph *g) {
+  enum Types { IN_COUNT = 0, OUT_COUNT = 1, LOCAL_COUNT = 2, COUNT_TYPES = 3 };
 
-    static int ticks = 0;
-    static guint64 past[COUNT_TYPES] = {0};
+  static int ticks = 0;
+  static guint64 past[COUNT_TYPES] = {0};
 
-    guint64 present[COUNT_TYPES] = {0};
+  guint64 present[COUNT_TYPES] = {0};
 
-    guint i;
-    gchar **devices;
-    glibtop_netlist netlist;
+  guint i;
+  gchar **devices;
+  glibtop_netlist netlist;
 
-    MultiloadApplet *multiload;
+  MultiloadApplet *multiload;
 
-    multiload = g->multiload;
-    devices = glibtop_get_netlist(&netlist);
+  multiload = g->multiload;
+  devices = glibtop_get_netlist(&netlist);
 
-    for(i = 0; i < netlist.number; ++i)
-    {
-        glibtop_netload netload;
+  for (i = 0; i < netlist.number; ++i) {
+    glibtop_netload netload;
 
-        glibtop_get_netload(&netload, devices[i]);
+    glibtop_get_netload(&netload, devices[i]);
 
-        g_return_if_fail((netload.flags & needed_netload_flags) == needed_netload_flags);
+    g_return_if_fail((netload.flags & needed_netload_flags) ==
+                     needed_netload_flags);
 
-        if (!(netload.if_flags & (1L << GLIBTOP_IF_FLAGS_UP)))
-            continue;
+    if (!(netload.if_flags & (1L << GLIBTOP_IF_FLAGS_UP))) continue;
 
-        if (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_LOOPBACK)) {
-            /* for loopback in and out are identical, so only count in */
-            present[LOCAL_COUNT] += netload.bytes_in;
-            continue;
-        }
-
-        /*
-         * Do not include virtual devices (VPN, PPPOE...) to avoid
-         * counting the same throughput several times.
-         */
-        if (is_net_device_virtual(devices[i]))
-            continue;
-
-        present[IN_COUNT] += netload.bytes_in;
-        present[OUT_COUNT] += netload.bytes_out;
+    if (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_LOOPBACK)) {
+      /* for loopback in and out are identical, so only count in */
+      present[LOCAL_COUNT] += netload.bytes_in;
+      continue;
     }
 
-    g_strfreev(devices);
-    netspeed_add (multiload->netspeed_in, present[IN_COUNT]);
-    netspeed_add (multiload->netspeed_out, present[OUT_COUNT]);
+    /*
+     * Do not include virtual devices (VPN, PPPOE...) to avoid
+     * counting the same throughput several times.
+     */
+    if (is_net_device_virtual(devices[i])) continue;
 
-    if(ticks < 2) /* avoid initial spike */
-    {
-        ticks++;
-        memset(data, 0, (COUNT_TYPES + 1) * sizeof data[0]);
-    }
-    else
-    {
-        data[COUNT_TYPES] = 0;
-        float seconds = (float) g->speed / 1000.0f;
-        for (i = 0; i < COUNT_TYPES; i++)
-        {
-            /* protect against weirdness */
-            if (present[i] >= past[i])
-                data[i] = (guint) ((float) (present[i] - past[i]) / seconds);
-            else
-                data[i] = 0;
-            data[COUNT_TYPES] += data[i];
-        }
-    }
+    present[IN_COUNT] += netload.bytes_in;
+    present[OUT_COUNT] += netload.bytes_out;
+  }
 
-    memcpy(past, present, sizeof past);
+  g_strfreev(devices);
+  netspeed_add(multiload->netspeed_in, present[IN_COUNT]);
+  netspeed_add(multiload->netspeed_out, present[OUT_COUNT]);
+
+  if (ticks < 2) /* avoid initial spike */
+  {
+    ticks++;
+    memset(data, 0, (COUNT_TYPES + 1) * sizeof data[0]);
+  } else {
+    data[COUNT_TYPES] = 0;
+    float seconds = (float)g->speed / 1000.0f;
+    for (i = 0; i < COUNT_TYPES; i++) {
+      /* protect against weirdness */
+      if (present[i] >= past[i])
+        data[i] = (guint)((float)(present[i] - past[i]) / seconds);
+      else
+        data[i] = 0;
+      data[COUNT_TYPES] += data[i];
+    }
+  }
+
+  memcpy(past, present, sizeof past);
 }

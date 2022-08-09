@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
@@ -26,25 +27,33 @@
 
 #include "cpufreq-monitor.h"
 
-#define CPUFREQ_TYPE_MONITOR_CPUINFO            (cpufreq_monitor_cpuinfo_get_type ())
-#define CPUFREQ_MONITOR_CPUINFO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), CPUFREQ_TYPE_MONITOR_CPUINFO, CPUFreqMonitorCPUInfo))
-#define CPUFREQ_MONITOR_CPUINFO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR_CPUINFO, CPUFreqMonitorCPUInfoClass))
-#define CPUFREQ_IS_MONITOR_CPUINFO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CPUFREQ_TYPE_MONITOR_CPUINFO))
-#define CPUFREQ_IS_MONITOR_CPUINFO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), CPUFREQ_TYPE_MONITOR_CPUINFO))
-#define CPUFREQ_MONITOR_CPUINFO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), CPUFREQ_TYPE_MONITOR_CPUINFO, CPUFreqMonitorCPUInfoClass))
+#define CPUFREQ_TYPE_MONITOR_CPUINFO (cpufreq_monitor_cpuinfo_get_type())
+#define CPUFREQ_MONITOR_CPUINFO(obj)                               \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), CPUFREQ_TYPE_MONITOR_CPUINFO, \
+                              CPUFreqMonitorCPUInfo))
+#define CPUFREQ_MONITOR_CPUINFO_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_MONITOR_CPUINFO, \
+                           CPUFreqMonitorCPUInfoClass))
+#define CPUFREQ_IS_MONITOR_CPUINFO(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), CPUFREQ_TYPE_MONITOR_CPUINFO))
+#define CPUFREQ_IS_MONITOR_CPUINFO_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), CPUFREQ_TYPE_MONITOR_CPUINFO))
+#define CPUFREQ_MONITOR_CPUINFO_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), CPUFREQ_TYPE_MONITOR_CPUINFO, \
+                             CPUFreqMonitorCPUInfoClass))
 
-typedef struct _CPUFreqMonitorCPUInfo      CPUFreqMonitorCPUInfo;
+typedef struct _CPUFreqMonitorCPUInfo CPUFreqMonitorCPUInfo;
 typedef struct _CPUFreqMonitorCPUInfoClass CPUFreqMonitorCPUInfoClass;
 
 struct _CPUFreqMonitorCPUInfo {
-    CPUFreqMonitor parent;
+  CPUFreqMonitor parent;
 };
 
 struct _CPUFreqMonitorCPUInfoClass {
-    CPUFreqMonitorClass parent_class;
+  CPUFreqMonitorClass parent_class;
 };
 
-GType           cpufreq_monitor_cpuinfo_get_type (void) G_GNUC_CONST;
-CPUFreqMonitor *cpufreq_monitor_cpuinfo_new      (guint cpu);
+GType cpufreq_monitor_cpuinfo_get_type(void) G_GNUC_CONST;
+CPUFreqMonitor *cpufreq_monitor_cpuinfo_new(guint cpu);
 
 #endif /* __CPUFREQ_MONITOR_CPUINFO_H__ */

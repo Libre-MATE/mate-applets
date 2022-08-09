@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
@@ -26,35 +27,40 @@
 
 G_BEGIN_DECLS
 
-#define CPUFREQ_TYPE_APPLET            (cpufreq_applet_get_type ())
-#define CPUFREQ_APPLET(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), CPUFREQ_TYPE_APPLET, CPUFreqApplet))
-#define CPUFREQ_APPLET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_APPLET, CPUFreqAppletClass))
-#define CPUFREQ_IS_APPLET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CPUFREQ_TYPE_APPLET))
-#define CPUFREQ_IS_APPLET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), CPUFREQ_TYPE_APPLET))
-#define CPUFREQ_APPLET_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), CPUFREQ_TYPE_APPLET, CPUFreqAppletClass))
+#define CPUFREQ_TYPE_APPLET (cpufreq_applet_get_type())
+#define CPUFREQ_APPLET(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), CPUFREQ_TYPE_APPLET, CPUFreqApplet))
+#define CPUFREQ_APPLET_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_APPLET, CPUFreqAppletClass))
+#define CPUFREQ_IS_APPLET(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), CPUFREQ_TYPE_APPLET))
+#define CPUFREQ_IS_APPLET_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), CPUFREQ_TYPE_APPLET))
+#define CPUFREQ_APPLET_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), CPUFREQ_TYPE_APPLET, CPUFreqAppletClass))
 
-#define CPUFREQ_TYPE_SHOW_MODE      (cpufreq_applet_show_mode_get_type ())
-#define CPUFREQ_TYPE_SHOW_TEXT_MODE (cpufreq_applet_show_text_mode_get_type ())
+#define CPUFREQ_TYPE_SHOW_MODE (cpufreq_applet_show_mode_get_type())
+#define CPUFREQ_TYPE_SHOW_TEXT_MODE (cpufreq_applet_show_text_mode_get_type())
 
-typedef struct _CPUFreqApplet      CPUFreqApplet;
+typedef struct _CPUFreqApplet CPUFreqApplet;
 typedef struct _CPUFreqAppletClass CPUFreqAppletClass;
 
 typedef enum {
-    CPUFREQ_MODE_GRAPHIC,
-    CPUFREQ_MODE_TEXT,
-    CPUFREQ_MODE_BOTH
+  CPUFREQ_MODE_GRAPHIC,
+  CPUFREQ_MODE_TEXT,
+  CPUFREQ_MODE_BOTH
 } CPUFreqShowMode;
 
 typedef enum {
-    CPUFREQ_MODE_TEXT_FREQUENCY,
-    CPUFREQ_MODE_TEXT_FREQUENCY_UNIT,
-    CPUFREQ_MODE_TEXT_PERCENTAGE
+  CPUFREQ_MODE_TEXT_FREQUENCY,
+  CPUFREQ_MODE_TEXT_FREQUENCY_UNIT,
+  CPUFREQ_MODE_TEXT_PERCENTAGE
 } CPUFreqShowTextMode;
 
-GType    cpufreq_applet_get_type                (void) G_GNUC_CONST;
+GType cpufreq_applet_get_type(void) G_GNUC_CONST;
 
-GType    cpufreq_applet_show_mode_get_type      (void) G_GNUC_CONST;
-GType    cpufreq_applet_show_text_mode_get_type (void) G_GNUC_CONST;
+GType cpufreq_applet_show_mode_get_type(void) G_GNUC_CONST;
+GType cpufreq_applet_show_text_mode_get_type(void) G_GNUC_CONST;
 
 G_END_DECLS
 

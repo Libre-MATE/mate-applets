@@ -13,7 +13,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 
 #ifndef __ACPI_FREEBSD_H__
@@ -30,17 +31,18 @@
 #define ACPI_STATE "hw.acpi.battery.state"
 
 struct acpi_info {
-  gboolean  ac_online;
-  int       acpifd;
-  int       max_capacity;
-  int       low_capacity;
-  int       critical_capacity;
+  gboolean ac_online;
+  int acpifd;
+  int max_capacity;
+  int low_capacity;
+  int critical_capacity;
 };
 
-gboolean acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo);
-gboolean acpi_process_event(struct acpi_info * acpiinfo);
-gboolean acpi_freebsd_init(struct acpi_info * acpiinfo);
-void acpi_freebsd_cleanup(struct acpi_info * acpiinfo);
+gboolean acpi_freebsd_read(struct apm_info *apminfo,
+                           struct acpi_info *acpiinfo);
+gboolean acpi_process_event(struct acpi_info *acpiinfo);
+gboolean acpi_freebsd_init(struct acpi_info *acpiinfo);
+void acpi_freebsd_cleanup(struct acpi_info *acpiinfo);
 
 #endif /* __ACPI_FREEBSD_H__ */
 /*
@@ -58,7 +60,8 @@ void acpi_freebsd_cleanup(struct acpi_info * acpiinfo);
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 
 #ifndef __ACPI_FREEBSD_H__
@@ -75,16 +78,17 @@ void acpi_freebsd_cleanup(struct acpi_info * acpiinfo);
 #define ACPI_STATE "hw.acpi.battery.state"
 
 struct acpi_info {
-  gboolean  ac_online;
-  int       acpifd;
-  int       max_capacity;
-  int       low_capacity;
-  int       critical_capacity;
+  gboolean ac_online;
+  int acpifd;
+  int max_capacity;
+  int low_capacity;
+  int critical_capacity;
 };
 
-gboolean acpi_freebsd_read(struct apm_info *apminfo, struct acpi_info * acpiinfo);
-gboolean acpi_process_event(struct acpi_info * acpiinfo);
-gboolean acpi_freebsd_init(struct acpi_info * acpiinfo);
-void acpi_freebsd_cleanup(struct acpi_info * acpiinfo);
+gboolean acpi_freebsd_read(struct apm_info *apminfo,
+                           struct acpi_info *acpiinfo);
+gboolean acpi_process_event(struct acpi_info *acpiinfo);
+gboolean acpi_freebsd_init(struct acpi_info *acpiinfo);
+void acpi_freebsd_cleanup(struct acpi_info *acpiinfo);
 
 #endif /* __ACPI_FREEBSD_H__ */

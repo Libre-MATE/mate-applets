@@ -27,44 +27,44 @@
 
 G_BEGIN_DECLS
 
-#define DRIVE_TYPE_BUTTON         (drive_button_get_type ())
-#define DRIVE_BUTTON(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), DRIVE_TYPE_BUTTON, DriveButton))
-#define DRIVE_BUTTON_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST ((k), DRIVE_TYPE_BUTTON, DriveButtonClass))
-#define DRIVE_IS_BUTTON(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), DRIVE_TYPE_BUTTON))
-#define DRIVE_IS_BUTTON_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), DRIVE_TYPE_BUTTON))
-#define DRIVE_BUTTON_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), DRIVE_TYPE_BUTTON, DriveButtonClass))
+#define DRIVE_TYPE_BUTTON (drive_button_get_type())
+#define DRIVE_BUTTON(o) \
+  (G_TYPE_CHECK_INSTANCE_CAST((o), DRIVE_TYPE_BUTTON, DriveButton))
+#define DRIVE_BUTTON_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_CAST((k), DRIVE_TYPE_BUTTON, DriveButtonClass))
+#define DRIVE_IS_BUTTON(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), DRIVE_TYPE_BUTTON))
+#define DRIVE_IS_BUTTON_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_TYPE((k), DRIVE_TYPE_BUTTON))
+#define DRIVE_BUTTON_GET_CLASS(o) \
+  (G_TYPE_INSTANCE_GET_CLASS((o), DRIVE_TYPE_BUTTON, DriveButtonClass))
 
-typedef struct _DriveButton      DriveButton;
+typedef struct _DriveButton DriveButton;
 typedef struct _DriveButtonClass DriveButtonClass;
 
-struct _DriveButton
-{
-    GtkButton parent;
+struct _DriveButton {
+  GtkButton parent;
 
-    GVolume *volume;
-    GMount *mount;
-    int icon_size;
-    guint update_tag;
+  GVolume *volume;
+  GMount *mount;
+  int icon_size;
+  guint update_tag;
 
-    GtkWidget *popup_menu;
+  GtkWidget *popup_menu;
 };
 
-struct _DriveButtonClass
-{
-    GtkButtonClass parent;
+struct _DriveButtonClass {
+  GtkButtonClass parent;
 };
 
-GType      drive_button_get_type        (void);
-GtkWidget *drive_button_new             (GVolume *volume);
-GtkWidget *drive_button_new_from_mount  (GMount *mount);
-void       drive_button_queue_update    (DriveButton *button);
-void       drive_button_set_size        (DriveButton *button,
-                                         int          icon_size);
+GType drive_button_get_type(void);
+GtkWidget *drive_button_new(GVolume *volume);
+GtkWidget *drive_button_new_from_mount(GMount *mount);
+void drive_button_queue_update(DriveButton *button);
+void drive_button_set_size(DriveButton *button, int icon_size);
 
-int        drive_button_compare         (DriveButton *button,
-                                         DriveButton *other_button);
+int drive_button_compare(DriveButton *button, DriveButton *other_button);
 
-void       drive_button_redraw (gpointer key, gpointer value, gpointer user_data);
+void drive_button_redraw(gpointer key, gpointer value, gpointer user_data);
 
 G_END_DECLS
 

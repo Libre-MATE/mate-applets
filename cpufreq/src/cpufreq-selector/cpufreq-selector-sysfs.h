@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public
  *  License along with this library; if not, write to the Free
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  *
  * Authors : Carlos García Campos <carlosgc@gnome.org>
  */
@@ -28,29 +29,37 @@
 
 G_BEGIN_DECLS
 
-#define CPUFREQ_TYPE_SELECTOR_SYSFS            (cpufreq_selector_sysfs_get_type ())
-#define CPUFREQ_SELECTOR_SYSFS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), CPUFREQ_TYPE_SELECTOR_SYSFS, CPUFreqSelectorSysfs))
-#define CPUFREQ_SELECTOR_SYSFS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_SELECTOR_SYSFS, CPUFreqSelectorSysfsClass))
-#define CPUFREQ_IS_SELECTOR_SYSFS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CPUFREQ_TYPE_SELECTOR_SYSFS))
-#define CPUFREQ_IS_SELECTOR_SYSFS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), CPUFREQ_TYPE_SELECTOR_SYSFS))
-#define CPUFREQ_SELECTOR_SYSFS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), CPUFREQ_TYPE_SELECTOR_SYSFS, CPUFreqSelectorSysfsClass))
+#define CPUFREQ_TYPE_SELECTOR_SYSFS (cpufreq_selector_sysfs_get_type())
+#define CPUFREQ_SELECTOR_SYSFS(obj)                               \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), CPUFREQ_TYPE_SELECTOR_SYSFS, \
+                              CPUFreqSelectorSysfs))
+#define CPUFREQ_SELECTOR_SYSFS_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), CPUFREQ_TYPE_SELECTOR_SYSFS, \
+                           CPUFreqSelectorSysfsClass))
+#define CPUFREQ_IS_SELECTOR_SYSFS(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), CPUFREQ_TYPE_SELECTOR_SYSFS))
+#define CPUFREQ_IS_SELECTOR_SYSFS_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), CPUFREQ_TYPE_SELECTOR_SYSFS))
+#define CPUFREQ_SELECTOR_SYSFS_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), CPUFREQ_TYPE_SELECTOR_SYSFS, \
+                             CPUFreqSelectorSysfsClass))
 
-typedef struct _CPUFreqSelectorSysfs        CPUFreqSelectorSysfs;
-typedef struct _CPUFreqSelectorSysfsClass   CPUFreqSelectorSysfsClass;
+typedef struct _CPUFreqSelectorSysfs CPUFreqSelectorSysfs;
+typedef struct _CPUFreqSelectorSysfsClass CPUFreqSelectorSysfsClass;
 typedef struct _CPUFreqSelectorSysfsPrivate CPUFreqSelectorSysfsPrivate;
 
 struct _CPUFreqSelectorSysfs {
-    CPUFreqSelector parent;
+  CPUFreqSelector parent;
 
-    CPUFreqSelectorSysfsPrivate *priv;
+  CPUFreqSelectorSysfsPrivate *priv;
 };
 
 struct _CPUFreqSelectorSysfsClass {
-    CPUFreqSelectorClass parent_class;
+  CPUFreqSelectorClass parent_class;
 };
 
-GType            cpufreq_selector_sysfs_get_type (void) G_GNUC_CONST;
-CPUFreqSelector *cpufreq_selector_sysfs_new      (guint cpu);
+GType cpufreq_selector_sysfs_get_type(void) G_GNUC_CONST;
+CPUFreqSelector *cpufreq_selector_sysfs_new(guint cpu);
 
 G_END_DECLS
 

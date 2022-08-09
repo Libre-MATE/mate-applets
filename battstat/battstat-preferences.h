@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ USA.
  *
  $Id$
  */
@@ -28,11 +29,11 @@
 
 G_BEGIN_DECLS
 
-#define BATTSTAT_TYPE_PREFERENCES battstat_preferences_get_type ()
-G_DECLARE_FINAL_TYPE (BattstatPreferences, battstat_preferences,
-                      BATTSTAT, PREFERENCES, GtkDialog)
+#define BATTSTAT_TYPE_PREFERENCES battstat_preferences_get_type()
+G_DECLARE_FINAL_TYPE(BattstatPreferences, battstat_preferences, BATTSTAT,
+                     PREFERENCES, GtkDialog)
 
-GtkWidget        *battstat_preferences_new              (ProgressData *battstat);
+GtkWidget *battstat_preferences_new(ProgressData *battstat);
 
 G_END_DECLS
 

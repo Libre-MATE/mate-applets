@@ -16,7 +16,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  *
  * $Id$
  */
@@ -24,11 +25,11 @@
 #ifndef _battstat_upower_h_
 #define _battstat_upower_h_
 
-char *battstat_upower_initialise (void (*) (void));
-void battstat_upower_cleanup (void);
-void error_dialog (const char *fmt , ...);
+char *battstat_upower_initialise(void (*)(void));
+void battstat_upower_cleanup(void);
+void error_dialog(const char *fmt, ...);
 
 #include "battstat.h"
-void battstat_upower_get_battery_info (BatteryStatus *status);
+void battstat_upower_get_battery_info(BatteryStatus *status);
 
 #endif /* _battstat_upower_h_ */

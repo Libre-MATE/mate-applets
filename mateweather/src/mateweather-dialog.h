@@ -21,14 +21,13 @@
 
 G_BEGIN_DECLS
 
-#define MATEWEATHER_TYPE_DIALOG mateweather_dialog_get_type ()
-G_DECLARE_FINAL_TYPE (MateWeatherDialog, mateweather_dialog,
-                      MATEWEATHER, DIALOG, GtkDialog)
+#define MATEWEATHER_TYPE_DIALOG mateweather_dialog_get_type()
+G_DECLARE_FINAL_TYPE(MateWeatherDialog, mateweather_dialog, MATEWEATHER, DIALOG,
+                     GtkDialog)
 
-GtkWidget        *mateweather_dialog_new                (MateWeatherApplet *applet);
-void              mateweather_dialog_update             (MateWeatherDialog *dialog);
+GtkWidget *mateweather_dialog_new(MateWeatherApplet *applet);
+void mateweather_dialog_update(MateWeatherDialog *dialog);
 
 G_END_DECLS
 
 #endif /* __MATEWEATHER_DIALOG_H_ */
-
