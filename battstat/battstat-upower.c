@@ -245,7 +245,7 @@ void battstat_upower_get_battery_info(BatteryStatus *status) {
 
     remaining = current_charge_total;
     remaining /= rate_total;
-    status->minutes = (int)floor(remaining * 60.0 + 0.5);
+    status->minutes = (int)(remaining * 60.0);
   } else if (charging && rate_total != 0) {
     /* Calculate time remaining until charged.  For systems with more than
      * one battery, this code is very approximate.  The assumption is that if
@@ -257,10 +257,12 @@ void battstat_upower_get_battery_info(BatteryStatus *status) {
     double remaining;
 
     remaining = full_capacity_total - current_charge_total;
-    if (remaining < 0) remaining = 0;
-    remaining /= rate_total;
-
-    status->minutes = (int)floor(remaining * 60.0 + 0.5);
+    if (remaining < 0.0) {
+      status->minutes = 0;
+    } else {
+      remaining /= rate_total;
+      status->minutes = (int)(remaining * 60.0);
+    }
   } else {
     /* On AC power and not charging -or- rate is unknown. */
     status->minutes = -1;
