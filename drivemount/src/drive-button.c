@@ -44,9 +44,6 @@ static void drive_button_reset_popup(DriveButton *self);
 static void drive_button_ensure_popup(DriveButton *self);
 
 static void drive_button_dispose(GObject *object);
-#if 0
-static void     drive_button_unrealize    (GtkWidget      *widget);
-#endif /* 0 */
 static gboolean drive_button_button_press(GtkWidget *widget,
                                           GdkEventButton *event);
 static gboolean drive_button_key_press(GtkWidget *widget, GdkEventKey *event);
@@ -423,14 +420,6 @@ static void drive_button_reset_popup(DriveButton *self) {
   if (self->popup_menu) gtk_widget_destroy(GTK_WIDGET(self->popup_menu));
   self->popup_menu = NULL;
 }
-
-#if 0
-static void
-popup_menu_detach (GtkWidget *attach_widget, GtkMenu *menu)
-{
-    DRIVE_BUTTON (attach_widget)->popup_menu = NULL;
-}
-#endif /* 0 */
 
 static char *escape_underscores(const char *str) {
   char *new_str;

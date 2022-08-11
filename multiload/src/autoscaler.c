@@ -38,8 +38,6 @@ guint64 autoscaler_get_max(AutoScaler *that, guint64 current) {
 
   that->max = MAX(that->max, current);
   that->max = MAX(that->max, that->floor);
-#if 0
-    printf("%p max = %u, current = %u, last_average = %f\n", that, that->max, current, that->last_average);
-#endif
+
   return that->max;
 }

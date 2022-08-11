@@ -95,20 +95,6 @@ static GHashTable *read_file(const char *file, char *buf, size_t bufsize) {
   return hash;
 }
 
-#if 0
-static gboolean
-read_bool (GHashTable *hash, const char *key)
-{
-    char *s;
-
-    g_return_val_if_fail (hash, FALSE);
-    g_return_val_if_fail (key, FALSE);
-
-    s = g_hash_table_lookup (hash, key);
-    return s && (*s == 'y');
-}
-#endif
-
 static long read_long(GHashTable *hash, const char *key) {
   char *s;
 
