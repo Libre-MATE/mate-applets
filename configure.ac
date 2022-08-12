@@ -3,7 +3,7 @@ dnl *** configure.in for MATE-APPLETS                                      ***
 dnl ***************************************************************************
 AC_INIT([mate-applets], [1.26.0], [https://github.com/mate-desktop/mate-applets/issues],
         [mate-applets], [https://mate-desktop.org])
-AC_PREREQ(2.59)
+AC_PREREQ(2.60)
 
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([1.9 tar-ustar dist-xz no-dist-gzip check-news])
@@ -32,7 +32,7 @@ AM_MAINTAINER_MODE
 PKG_PROG_PKG_CONFIG([0.19])
 
 AC_PROG_CC
-AM_PROG_LIBTOOL
+LT_INIT
 AC_PATH_XTRA
 
 X_LIBS="$X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS"
