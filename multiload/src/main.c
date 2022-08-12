@@ -50,7 +50,8 @@ static void about_cb(GtkAction *action, MultiloadApplet *ma) {
   gtk_show_about_dialog(
       NULL, "title", _("About System Monitor"), "version", VERSION, "copyright",
       _("Copyright \xc2\xa9 1999-2005 Free Software Foundation and others\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "comments",
       _("A system load monitor capable of displaying graphs "
         "for CPU, ram, and swap space use, plus network "

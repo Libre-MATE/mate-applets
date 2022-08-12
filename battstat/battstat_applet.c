@@ -714,7 +714,8 @@ static void about_cb(GtkAction *action, ProgressData *battstat) {
       "copyright",
       _("Copyright \xc2\xa9 2000 The Gnulix Society\n"
         "Copyright \xc2\xa9 2002-2005 Free Software Foundation and others\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "comments", comments, "authors", authors, "documenters", documenters,
       "translator-credits", _("translator-credits"), "logo-icon-name",
       "battery", NULL);

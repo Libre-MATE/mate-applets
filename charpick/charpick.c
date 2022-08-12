@@ -496,7 +496,8 @@ static void about(GtkAction *action, charpick_data *curr_data) {
                         VERSION, "copyright",
                         _("Copyright \xc2\xa9 1998, 2004-2005 GNOME Applets "
                           "Maintainers and others\n"
-                          "Copyright \xc2\xa9 2012-2021 MATE developers"),
+                          "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+                          "Copyright \xc2\xa9 2022 Libre MATE"),
                         "comments",
                         _("MATE Panel applet for selecting strange "
                           "characters that are not on the keyboard. "

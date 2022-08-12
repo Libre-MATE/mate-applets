@@ -172,7 +172,8 @@ static void about_cb(GtkAction *action, EyesApplet *eyes_applet) {
         "panel. They follow your mouse."),
       "copyright",
       _("Copyright \xC2\xA9 1999 Dave Camp\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "authors", authors, "documenters", documenters, "translator-credits",
       _("translator-credits"), "logo-icon-name", "mate-eyes-applet", NULL);
 }

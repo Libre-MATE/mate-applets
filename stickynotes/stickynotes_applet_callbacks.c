@@ -355,7 +355,8 @@ void menu_about_cb(GtkAction *action, StickyNotesApplet *applet) {
                         VERSION, "copyright",
                         _("Copyright \xc2\xa9 2002-2003 Loban A Rahman\n"
                           "Copyright \xc2\xa9 2005 Davyd Madeley\n"
-                          "Copyright \xc2\xa9 2012-2021 MATE developers"),
+                          "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+                          "Copyright \xc2\xa9 2022 Libre MATE"),
                         "comments",
                         _("Sticky Notes for the "
                           "MATE Desktop Environment"),

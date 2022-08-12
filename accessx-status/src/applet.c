@@ -103,7 +103,8 @@ static void about_cb(GtkAction* action, AccessxStatusApplet* sapplet) {
       _("Shows the state of AccessX features such as latched modifiers"),
       "copyright",
       _("Copyright \xc2\xa9 2003 Sun Microsystems\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "authors", authors, "documenters", documenters, "translator-credits",
       _("translator-credits"), "logo-icon-name", ACCESSX_APPLET, NULL);
 }

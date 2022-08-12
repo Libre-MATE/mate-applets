@@ -97,7 +97,8 @@ static void display_about_dialog(GtkAction *action, DriveList *drive_list) {
   gtk_show_about_dialog(
       NULL, "title", _("About Disk Mounter"), "version", VERSION, "copyright",
       _("Copyright \xC2\xA9 2004 Canonical Ltd\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "comments", _("Applet for mounting and unmounting block volumes."),
       "authors", authors, "documenters", documenters, "translator-credits",
       _("translator-credits"), "logo_icon_name", "media-floppy", NULL);

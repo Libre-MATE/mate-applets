@@ -349,7 +349,8 @@ static void trash_applet_show_about(GtkAction *action, TrashApplet *applet) {
       NULL, "title", _("About Trash Applet"), "version", VERSION, "copyright",
       _("Copyright \xc2\xa9 2004 Michiel Sikkes\n"
         "Copyright \xc2\xa9 2008 Ryan Lortie\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "comments",
       _("A MATE trash bin that lives in your panel. "
         "You can use it to view the trash or drag "

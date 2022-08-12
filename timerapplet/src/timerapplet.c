@@ -273,7 +273,8 @@ static void timer_about_callback(GtkAction *action, TimerApplet *applet) {
   gtk_show_about_dialog(
       NULL, "title", _("About Timer Applet"), "version", VERSION, "copyright",
       _("Copyright \xc2\xa9 2014 Stefano Karapetsas\n"
-        "Copyright \xc2\xa9 2015-2021 MATE developers"),
+        "Copyright \xc2\xa9 2015-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "authors", authors, "comments",
       _("Start a timer and receive a notification when it is finished"),
       "translator-credits", _("translator-credits"), "logo-icon-name",
