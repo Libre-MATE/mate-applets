@@ -220,10 +220,11 @@ dnl ***************************************************************************
 AM_GNU_GETTEXT_VERSION([0.19.8])
 AM_GNU_GETTEXT([external])
 
-GETTEXT_PACKAGE=mate-applets
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext Package])
 AC_DEFINE_DIR(MATELOCALEDIR, "${datadir}/locale", [locale directory])
+AM_CONDITIONAL([USE_NLS], [test "x${USE_NLS}" = "xyes"])
 
 dnl ***************************************************************************
 dnl *** yelp-tools                                                          ***
@@ -660,4 +661,5 @@ Configure summary:
     Using UPOWER:                  $HAVE_UPOWER
     Using libnotify:               $HAVE_LIBNOTIFY
     Enabling IPv6:                 $have_ipv6
+    Native Language support:       $USE_NLS
 " >&2
