@@ -4,7 +4,7 @@ dnl ***************************************************************************
 AC_INIT([mate-applets], [1.26.0], [https://github.com/Libre-MATE/mate-applets/issues],
         [mate-applets], [https://github.com/Libre-MATE/mate-applets])
 AC_PREREQ(2.60)
-
+AC_COPYRIGHT([Copyright (C) 2022 Libre MATE])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([1.9 tar-ustar dist-xz no-dist-gzip check-news])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
