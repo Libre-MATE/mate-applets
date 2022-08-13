@@ -9,7 +9,7 @@ applet_in_files = org.mate.applets.CPUFreqApplet.mate-panel-applet.desktop.in
 applet_DATA     = $(applet_in_files:.mate-panel-applet.desktop.in=.mate-panel-applet)
 
 $(applet_in_files): $(applet_in_files).in Makefile
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
             -e "s|\@LIBEXECDIR\@|$(libexecdir)|" \
             -e "s|\@VERSION\@|$(PACKAGE_VERSION)|" \
             $< > $@
@@ -22,7 +22,7 @@ service_in_files = org.mate.panel.applet.CPUFreqAppletFactory.service.in
 service_DATA     = $(service_in_files:.service.in=.service)
 
 org.mate.panel.applet.CPUFreqAppletFactory.service: $(service_in_files)
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
             -e "s|\@LIBEXECDIR\@|$(libexecdir)|" \
             $< > $@
 

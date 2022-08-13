@@ -55,7 +55,7 @@ appletdir   = $(datadir)/mate-panel/applets
 applet_DATA = $(applet_in_files:.mate-panel-applet.desktop.in=.mate-panel-applet)
 
 $(applet_in_files): $(applet_in_files:=.in) Makefile
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
             -e "s|\@LIBEXECDIR\@|$(libexecdir)|" \
             -e "s|\@VERSION\@|$(PACKAGE_VERSION)|" \
             $< > $@
@@ -67,7 +67,7 @@ servicedir   = $(datadir)/dbus-1/services
 service_DATA = $(service_in_files:.service.in=.service)
 
 org.mate.panel.applet.StickyNotesAppletFactory.service: $(service_in_files)
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
             -e "s|\@LIBEXECDIR\@|$(libexecdir)|" \
             $< > $@
 

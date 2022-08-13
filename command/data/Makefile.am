@@ -5,7 +5,7 @@ applets_in_files = org.mate.applets.CommandApplet.mate-panel-applet.desktop.in
 applets_DATA     = $(applets_in_files:.mate-panel-applet.desktop.in=.mate-panel-applet)
 
 $(applets_in_files): $(applets_in_files).in Makefile
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
 		-e "s|\@LOCATION\@|$(APPLET_LOCATION)|" \
 		$< > $@
 
@@ -17,7 +17,7 @@ service_in_files = org.mate.panel.applet.CommandAppletFactory.service.in
 service_DATA     = $(service_in_files:.service.in=.service)
 
 org.mate.panel.applet.CommandAppletFactory.service: $(service_in_files)
-	$(AM_V_GEN)sed \
+	$(AM_V_GEN)$(SED) \
 		-e "s|\@LOCATION\@|$(APPLET_LOCATION)|" \
 		$< > $@
 

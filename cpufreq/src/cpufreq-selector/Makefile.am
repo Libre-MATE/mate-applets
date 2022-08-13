@@ -65,12 +65,12 @@ cpufreq-selector-service-glue.h: $(srcdir)/cpufreq-selector-service.xml
 
 dbus_services_DATA = $(dbus_services_in_files:.service.in=.service)
 $(dbus_services_DATA): $(dbus_services_in_files)
-	sed -e "s|\@BINDIR\@|$(DESTDIR)$(bindir)|" $< > $@
+	$(AM_V_GEN)$(SED) -e "s|\@BINDIR\@|$(DESTDIR)$(bindir)|" $< > $@
 dbus_conf_DATA = org.mate.CPUFreqSelector.conf
 
 polkit_DATA = $(polkit_in_files:.policy.in=.policy)
 $(polkit_DATA): $(polkit_in_files)
-	$(AM_V_GEN) $(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
+	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 else
 dbus_services_DATA=
 dbus_conf_DATA=
